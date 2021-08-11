@@ -1,28 +1,48 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app id="inspire">
+    <v-navigation-drawer
+        v-model="drawer"
+        app
+    >
+      <!--  -->
+    </v-navigation-drawer>
+
+    <v-app-bar dark color="indigo" app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title>EasyCraft</v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data: () => ({drawer: false}),
+  store: {
+    state: {
+      siteTitle: "EasyCraft",
+      api: "http://127.0.0.1/api",
+      isLogin: false
+    }
+  },
+  computed: {
+    siteTitle() {
+      return this.$store.state.siteTitle;
+    }
+  },
+  created() {
+    this.$http.get(this.$store.state.api + "/login/status")
+        .then(res => {
+          this.$store.state.isLogin = res.data.status;
+          if (!res.data.status){
+            this.$router.push("/login")
+          }
+        })
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
