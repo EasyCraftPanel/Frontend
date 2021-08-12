@@ -7,8 +7,7 @@ import axios from "./plugins/http";
 import store from './store'
 
 Vue.config.productionTip = false
-Vue.prototype.$http = axios;
-
+Vue.prototype.$axios = axios
 new Vue({
     axios,
     router,

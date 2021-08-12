@@ -2,47 +2,96 @@
   <v-app id="inspire">
     <v-navigation-drawer
         v-model="drawer"
+        class="app-drawer"
         app
     >
-      <!--  -->
+      <v-list>
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img v-bind:src="$store.getters.avatar"></v-img>
+          </v-list-item-avatar>
+        </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-content>
+            <v-list-item-title class="text-h6">
+              {{ $store.state.userInfo.name }}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{ $store.getters.userTypeStr }}</v-list-item-subtitle>
+          </v-list-item-content>
+
+          <v-list-item-action>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn @click="logout" icon v-bind="attrs"
+                       v-on="on">
+                  <v-icon>{{ $store.getters.isLogin ? "mdi-exit-to-app" : "mdi-account" }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ $store.getters.isLogin ? "登出" : "登录" }}</span>
+            </v-tooltip>
+
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+
     </v-navigation-drawer>
 
     <v-app-bar dark color="indigo" app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>EasyCraft</v-toolbar-title>
+      <v-toolbar-title>{{ $store.getters.siteTitle }}</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <transition name="fade" mode="out-in">
+        <router-view/>
+      </transition>
     </v-main>
   </v-app>
 </template>
+
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+#inspire{
+  background-image: url("https://i.loli.net/2021/08/12/hJMAIbZiBn4sRq2.jpg");
+}
+
+.app-drawer{
+  background-color: rgba(255,255,255,0.6) !important;
+}
+</style>
 
 <script>
 export default {
   name: 'App',
   data: () => ({drawer: false}),
-  store: {
-    state: {
-      siteTitle: "EasyCraft",
-      api: "http://127.0.0.1/api",
-      isLogin: false
-    }
-  },
-  computed: {
-    siteTitle() {
-      return this.$store.state.siteTitle;
-    }
-  },
   created() {
-    this.$http.get(this.$store.state.api + "/login/status")
+    this.$axios.get(this.$store.state.api + "/login/status")
         .then(res => {
-          this.$store.state.isLogin = res.data.status;
-          if (!res.data.status){
-            this.$router.push("/login")
+          if (!res.data.status) {
+            window.localStorage.removeItem("auth")
+            if (this.$route.name !== "login")
+              this.$router.push("/login")
+          } else {
+            this.$store.commit('onLogin', res.data.data.UserInfo)
           }
-        })
+        }).catch(() => {
+    })
+  },
+  methods: {
+    logout: function () {
+      if (this.$store.getters.isLogin)
+        this.$router.push('/logout')
+      else
+        this.$router.push('/login')
+    }
   }
 }
 </script>

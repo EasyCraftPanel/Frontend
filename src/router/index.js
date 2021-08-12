@@ -7,15 +7,18 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/login',
-        name: 'Login',
+        name: 'login',
         component: Login,
         meta: {
-            noAuth: true
+            Auth: false
         }
     },
     {
         path: '/about',
-        name: 'About',
+        name: 'about',
+        meta: {
+            Auth: false
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -23,8 +26,13 @@ const routes = [
     },
     {
         path: '/logout',
-        name: 'Logout',
+        name: 'logout',
         component: () => import('../views/Logout')
+    },
+    {
+        path: '/index',
+        name: 'index',
+        component: () => import('../views/Index')
     }
 ]
 
@@ -33,18 +41,20 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (!to.meta.noAuth) {  // 判断该路由是否需要登录权限
-        if (localStorage.token) {  // 获取当前的token是否存在
-            next();
+    if (window.localStorage.token) {
+        next();
+    } else {
+        if (Object.prototype.hasOwnProperty.call(to.meta, "Auth") && !to.meta.Auth) {
+            next()
         } else {
             next({
                 path: '/login', // 将跳转的路由path作为参数，登录成功后跳转到该路由
                 query: {redirect: to.fullPath}
             })
+
         }
-    } else { // 如果不需要权限校验，直接进入路由界面
-        next();
     }
+
 });
 
 

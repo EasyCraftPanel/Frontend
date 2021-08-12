@@ -1,5 +1,10 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <v-container>
+    <v-card>
+
+      <v-card-title>EasyCraft</v-card-title>
+      <v-card-subtitle>Copyright © Kengwang, Under GPL v3 Licence</v-card-subtitle>
+    </v-card>
+  </v-container>
+
 </template>

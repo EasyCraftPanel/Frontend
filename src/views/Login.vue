@@ -5,9 +5,11 @@
         offset-lg="8"
     >
       <v-card
-          class="easycraft-login-card align-center"
+          shaped
+          v-bind:loading="loading"
+          class="easycraft-login-card"
       >
-        <v-card-title>登录</v-card-title>
+        <v-card-title class="card-title">登录</v-card-title>
         <v-card-subtitle>登录到 EasyCraft</v-card-subtitle>
         <v-form
             class="easycraft-login-from"
@@ -18,6 +20,7 @@
               prepend-icon="mdi-account"
               label="用户名"/>
           <v-text-field
+              @keyup.enter="login"
               v-model="form.password"
               type="password"
               prepend-icon="mdi-lock"
@@ -41,10 +44,14 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "Login",
+  created() {
+    this.$store.commit('changeTitle', "登录")
+    if (this.$store.getters.isLogin) {
+      this.$router.push("index")
+    }
+  },
   data() {
     return {
       form: {
@@ -53,17 +60,19 @@ export default {
       },
       loginerror: false,
       errormsg: "",
-      tipseen: false
+      tipseen: false,
+      loading: false
     }
   },
   methods: {
     login: function () {
-      this.tipseen = true
       let data = new FormData();
       data.append("username", this.form.username)
-      data.append("password", this.form.password);
-      axios.post(this.$store.state.api + "/login", data)
+      data.append("password", this.form.password)
+      this.loading = true
+      this.$axios.post(this.$store.state.api + "/login", data)
           .then(data => {
+            this.tipseen = true
             if (!data.data.status) {
               this.loginerror = true
               this.errormsg = data.data.msg
@@ -71,11 +80,17 @@ export default {
               this.loginerror = false
               this.errormsg = data.data.msg
               window.localStorage["token"] = data.data.data.UserRequest.auth;
-              this.$store.state.isLogin = true
+              this.$store.commit('onLogin', data.data.data.UserInfo)
+              setTimeout(() => {
+                this.$router.push("index")
+              }, 3000);
             }
+            this.loading = false
           }).catch(e => {
+        this.tipseen = true
         this.loginerror = true
         this.errormsg = e.toString()
+        this.loading = false
       });
     }
   }
@@ -84,10 +99,17 @@ export default {
 
 <style scoped>
 .easycraft-login-card {
-  padding: 15px;
+  margin-top: 10vh;
+  padding-bottom: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.card-title {
+  margin-top: 15px;
 }
 
 .easycraft-login-from {
-  margin: 10px;
+  margin: 15px;
 }
 </style>
