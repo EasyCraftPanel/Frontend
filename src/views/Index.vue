@@ -5,24 +5,38 @@
       <v-card-text>共 {{ serverCount }} 个</v-card-text>
       <v-list>
         <v-list-item
-            @click="serverClick(server.id)"
-            v-ripple
-            v-bind:key="server.id"
-            v-for="server in servers">
+          @click="serverClick(server.id)"
+          v-ripple
+          v-bind:key="server.id"
+          v-for="server in servers"
+        >
           <v-list-item-avatar>
             <v-icon
-                class="grey lighten-1"
-                v-bind:color="server.baseInfo.expired ? 'red' : (server.startInfo.running ? 'green' : 'yellow')"
-                dark
+              class="grey lighten-1"
+              v-bind:color="
+                server.baseInfo.expired
+                  ? 'red'
+                  : server.statusInfo.status
+                  ? 'green'
+                  : 'yellow'
+              "
+              dark
             >
-              {{ server.baseInfo.expired ? 'mdi-alert' : (server.startInfo.running ? 'mdi-play' : 'mdi-pause') }}
+              {{ serverStatusIcon(server) }}
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title v-text="server.baseInfo.name"></v-list-item-title>
+            <v-list-item-title
+              v-text="server.baseInfo.name"
+            ></v-list-item-title>
 
-            <v-list-item-subtitle>到期时间 {{ server.baseInfo.expireTime }}</v-list-item-subtitle>
-            <v-list-item-subtitle>端口 {{ server.baseInfo.port }}</v-list-item-subtitle>
+            <v-list-item-subtitle
+              >到期时间 {{ server.baseInfo.expireTime }}</v-list-item-subtitle
+            >
+            <v-list-item-subtitle
+              >端口: {{ server.baseInfo.port }} 最大玩家数:
+              {{ server.baseInfo.player }}
+            </v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
@@ -30,7 +44,6 @@
               <v-icon color="grey lighten-1">mdi-information</v-icon>
             </v-btn>
           </v-list-item-action>
-
         </v-list-item>
       </v-list>
     </v-card>
@@ -41,26 +54,40 @@
 export default {
   name: "Index",
   created() {
-    this.$store.commit('changeTitle', "服务器")
+    this.$store.commit("changeTitle", "服务器");
     this.$axios.get(this.$store.state.api + "/servers").then((res) => {
       this.servers = res.data.data;
-      this.serverCount = this.servers.length
-      this.loading = false
-    })
+      this.serverCount = this.servers.length;
+      this.loading = false;
+    });
   },
   data: () => ({
     loading: true,
     servers: {},
-    serverCount: 0
-  }),
+    serverCount: 0,
+  }),  
   methods: {
     serverClick: function (id) {
-      console.log(id)
-    }
-  }
-}
+      this.$router.push("/server/" + id);
+    },
+    serverStatusIcon: function (server) {
+      if (server.baseInfo.expired) return "mdi-alert";
+      switch (server.statusInfo.status) {
+        case 0:
+          return "mdi-pause";
+        case 1:
+          return "mdi-motion-play";
+        case 2:
+          return "mdi-play";
+        case 3:
+          return "mdi-motion-pause";
+        default:
+          return "mdi-help-circle-outline";
+      }
+    },
+  },  
+};
 </script>
 
 <style scoped>
-
 </style>

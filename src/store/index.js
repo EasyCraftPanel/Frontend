@@ -14,7 +14,7 @@ export default new Vuex.Store({
     },
     getters: {
         avatar: (state) => {
-            return state.isLogin ? "https://cn.gravatar.com/avatar/" + md5(state.userInfo.email) : "https://i.loli.net/2021/08/12/kF3HvDl9hoAxg8W.png"
+            return state.isLogin ? "https://cn.gravatar.com/avatar/" + md5(state.userInfo.email) : "https://i.loli.net/2021/08/14/mtXc7WeME6vKJQp.png"
         },
         siteTitle(state) {
             return state.siteTitle;

@@ -1,14 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from "@/views/Login";
+const { isNavigationFailure, NavigationFailureType } = VueRouter
 
 Vue.use(VueRouter)
 
+// 重复导航报错
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+   return originalPush.call(this, location).catch(failure => {
+    if (!isNavigationFailure(failure, NavigationFailureType.duplicated)) {
+        console.error(failure)
+    }
+  })
+}
 const routes = [
     {
         path: '/login',
         name: 'login',
-        component: Login,
+        component: () => import(/* webpackChunkName: "login" */ '../views/Login'),
         meta: {
             Auth: false
         }
@@ -27,12 +36,32 @@ const routes = [
     {
         path: '/logout',
         name: 'logout',
-        component: () => import('../views/Logout')
+        component: () => import(/* webpackChunkName: "logout" */ '../views/Logout')
     },
     {
         path: '/index',
         name: 'index',
-        component: () => import('../views/Index')
+        component: () => import(/* webpackChunkName: "logout" */ '../views/Index')
+    },
+    {
+        path: '/server/:id',
+        name: 'server',
+        children: [
+            {
+                path: 'index',
+                component: () => import(/* webpackChunkName: "serverIndex" */ '../views/Server/Index')
+            },
+            {
+                path: 'console',
+                component: () => import(/* webpackChunkName: "serverIndex" */ '../views/Server/Console')
+            },
+            {
+                path: 'configs',
+                component: () => import(/* webpackChunkName: "serverConfigs" */ '../views/Server/Configs')
+            }
+
+        ],
+        component: () => import(/* webpackChunkName: "server" */ '../views/Server')
     }
 ]
 
@@ -49,7 +78,7 @@ router.beforeEach((to, from, next) => {
         } else {
             next({
                 path: '/login', // 将跳转的路由path作为参数，登录成功后跳转到该路由
-                query: {redirect: to.fullPath}
+                query: { redirect: to.fullPath }
             })
 
         }
