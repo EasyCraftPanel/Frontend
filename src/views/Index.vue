@@ -5,36 +5,37 @@
       <v-card-text>共 {{ serverCount }} 个</v-card-text>
       <v-list>
         <v-list-item
-          @click="serverClick(server.id)"
-          v-ripple
-          v-bind:key="server.id"
-          v-for="server in servers"
+            @click="serverClick(server.id)"
+            v-ripple
+            v-bind:key="server.id"
+            v-for="server in servers"
         >
           <v-list-item-avatar>
             <v-icon
-              class="grey lighten-1"
-              v-bind:color="
+                class="grey lighten-1"
+                v-bind:color="
                 server.baseInfo.expired
                   ? 'red'
                   : server.statusInfo.status
                   ? 'green'
                   : 'yellow'
               "
-              dark
+                dark
             >
               {{ serverStatusIcon(server) }}
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
-              v-text="server.baseInfo.name"
+                v-text="server.baseInfo.name"
             ></v-list-item-title>
 
             <v-list-item-subtitle
-              >到期时间 {{ server.baseInfo.expireTime }}</v-list-item-subtitle
+            >到期时间 {{ server.baseInfo.expireTime }}
+            </v-list-item-subtitle
             >
             <v-list-item-subtitle
-              >端口: {{ server.baseInfo.port }} 最大玩家数:
+            >端口: {{ server.baseInfo.port }} 最大玩家数:
               {{ server.baseInfo.player }}
             </v-list-item-subtitle>
           </v-list-item-content>
@@ -56,16 +57,24 @@ export default {
   created() {
     this.$store.commit("changeTitle", "服务器");
     this.$axios.get(this.$store.state.api + "/servers").then((res) => {
-      this.servers = res.data.data;
-      this.serverCount = this.servers.length;
-      this.loading = false;
+      if (res.data.status) {
+        this.servers = res.data.data;
+        this.serverCount = this.servers.length;
+        this.loading = false;
+      } else {
+        this.loading = false;
+        this.$store.dispatch('snackbar/openSnackbar', {
+          msg: res.data.msg,
+          color: 'red'
+        })
+      }
     });
   },
   data: () => ({
     loading: true,
     servers: {},
     serverCount: 0,
-  }),  
+  }),
   methods: {
     serverClick: function (id) {
       this.$router.push("/server/" + id);
@@ -85,7 +94,7 @@ export default {
           return "mdi-help-circle-outline";
       }
     },
-  },  
+  },
 };
 </script>
 

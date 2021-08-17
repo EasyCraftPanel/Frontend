@@ -3,12 +3,13 @@ import Vuex from 'vuex'
 import md5 from 'js-md5'
 
 Vue.use(Vuex)
+import snackbar from "@/plugins/snackbar";
 
 export default new Vuex.Store({
     strict: true,
     state: {
         siteTitle: "EasyCraft",
-        api: "http://127.0.0.1/api",
+        api: "http://139.155.255.21:8888/api",
         isLogin: false,
         userInfo: {}
     },
@@ -58,5 +59,5 @@ export default new Vuex.Store({
         }
     },
     actions: {},
-    modules: {}
+    modules: {snackbar}
 })

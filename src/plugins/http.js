@@ -8,6 +8,7 @@ axios.defaults.baseURL = 'https://api.github.com';
 axios.interceptors.request.use(
     config => {
         if (localStorage.token) { //判断token是否存在
+            config.headers.ReqJson = true;
             config.headers.Authorization = localStorage.token;  //将token设置成请求头
         }
         return config;

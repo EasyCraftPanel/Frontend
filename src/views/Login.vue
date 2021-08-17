@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-col
-        lg="5"
+        lg="4"
         offset-lg="8"
     >
       <v-card

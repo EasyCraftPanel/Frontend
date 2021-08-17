@@ -33,6 +33,13 @@
 
           </v-list-item-action>
         </v-list-item>
+
+        <v-list-item @click="$router.push('/index')">
+          <v-list-item-icon>
+            <v-icon>mdi-server</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>服务器</v-list-item-content>
+        </v-list-item>
       </v-list>
 
     </v-navigation-drawer>
@@ -43,9 +50,15 @@
     </v-app-bar>
 
     <v-main>
-      <transition name="fade" mode="out-in">
-        <router-view/>
-      </transition>
+      <snackbar/>
+      <v-row>
+        <v-col cols="12" md="8" offset-md="2">
+          <transition name="fade" mode="out-in">
+            <router-view/>
+          </transition>
+        </v-col>
+      </v-row>
+
     </v-main>
   </v-app>
 </template>
@@ -59,18 +72,21 @@
   opacity: 0;
 }
 
-#inspire{
+#inspire {
   background-image: url("https://i.loli.net/2021/08/12/hJMAIbZiBn4sRq2.jpg");
 }
 
-.app-drawer{
-  background-color: rgba(255,255,255,0.6) !important;
+.app-drawer {
+  background-color: rgba(255, 255, 255, 0.6) !important;
 }
 </style>
 
 <script>
+import snackbar from '@/components/snackbar.vue'
+
 export default {
   name: 'App',
+  components: {snackbar},
   data: () => ({drawer: false}),
   created() {
     this.$axios.get(this.$store.state.api + "/login/status")
