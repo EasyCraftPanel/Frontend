@@ -3,8 +3,9 @@
     <h4 class="text-h4">服务器配置</h4>
     <v-list>
       <v-list-item
-        v-for="(config,index)  in configs"
-        :key="index" >
+          @click="jumpToConfig(index)"
+          v-for="(config,index)  in configs"
+          :key="index">
         <v-list-item-icon>
           <v-icon>mdi-file-document-outline</v-icon>
         </v-list-item-icon>
@@ -25,11 +26,16 @@ export default {
       configs: []
     }
   },
+  methods: {
+    jumpToConfig: function (config) {
+      this.$router.push("/server/" + this.$route.params.id + "/config/" + config)
+    }
+  },
   created() {
     let data = new FormData();
-    data.append("id",this.$route.params.id)
-    this.$axios.post(this.$store.state.api + "/server/configs/list",data).then(res=>{
-      if (res.data.status){
+    data.append("id", this.$route.params.id)
+    this.$axios.post(this.$store.state.api + "/server/configs/list", data).then(res => {
+      if (res.data.status) {
         this.configs = res.data.data
       } else {
         this.$store.dispatch('snackbar/openSnackbar', {

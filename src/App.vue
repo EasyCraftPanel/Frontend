@@ -74,6 +74,8 @@
 
 #inspire {
   background-image: url("https://i.loli.net/2021/08/12/hJMAIbZiBn4sRq2.jpg");
+  background-attachment: fixed;
+  background-size:100% 100%;
 }
 
 .app-drawer {

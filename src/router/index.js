@@ -62,8 +62,11 @@ const routes = [
             {
                 path: 'starter',
                 component: () => import(/* webpackChunkName: "serverStarter" */ '../views/Server/Starter')
+            },
+            {
+                path: 'config/:config',
+                component: () => import (/* webpackChunkName: "serverConfig" */ '../views/Server/Config')
             }
-
         ],
         component: () => import(/* webpackChunkName: "server" */ '../views/Server')
     }
