@@ -24,7 +24,7 @@ export default {
         obj [this.configValues[configValuesKey].key] = this.configValues[configValuesKey].value
       }
       data.append("values", JSON.stringify(obj))
-      this.$axios.post(this.$store.state.api + "/server/config/content/update", data).then(res => {
+      this.$axios.post("/server/config/content/update", data).then(res => {
         this.$store.dispatch('snackbar/openSnackbar', {
           msg: res.data.msg,
           color: res.data.status ? 'blue' : 'red'
@@ -43,7 +43,7 @@ export default {
     let data = new FormData()
     data.append("id", this.$route.params.id)
     data.append("config", this.$route.params.config)
-    this.$axios.post(this.$store.state.api + "/server/config/content", data).then(res => {
+    this.$axios.post("/server/config/content", data).then(res => {
       if (res.data.status) {
         this.config = res.data.data.configInfo
         this.configValues = res.data.data.configValue

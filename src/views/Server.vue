@@ -58,11 +58,11 @@ export default {
       switch (this.server.statusInfo.status) {
         case 0:
           this.server.statusInfo.status = 1
-          this.$axios.post(this.$store.state.api + "/server/start", data)
+          this.$axios.post("/server/start", data)
           break;
         case 2:
           this.server.statusInfo.status = 3
-          this.$axios.post(this.$store.state.api + "/server/stop", data)
+          this.$axios.post("/server/stop", data)
           break;
       }
     }
@@ -170,7 +170,7 @@ export default {
     let data = new FormData();
     data.append("id", this.$route.params.id);
     this.$axios
-        .post(this.$store.state.api + "/server", data)
+        .post("/server", data)
         .then((response) => {
           if (response.data.status) {
             this.server = response.data.data;
@@ -182,7 +182,7 @@ export default {
     this.timer = setInterval(() => {
       let data = new FormData();
       data.append("id", this.$route.params.id);
-      this.$axios.post(this.$store.state.api + "/server/status", data).then(res => {
+      this.$axios.post("/server/status", data).then(res => {
         if (res.data.status)
           this.server.statusInfo = res.data.data;
         else {

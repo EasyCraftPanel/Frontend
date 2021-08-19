@@ -56,7 +56,7 @@ export default {
   name: "Index",
   created() {
     this.$store.commit("changeTitle", "服务器");
-    this.$axios.get(this.$store.state.api + "/servers").then((res) => {
+    this.$axios.get("/servers").then((res) => {
       if (res.data.status) {
         this.servers = res.data.data;
         this.serverCount = this.servers.length;

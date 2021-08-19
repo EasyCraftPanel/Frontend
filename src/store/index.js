@@ -9,7 +9,6 @@ export default new Vuex.Store({
     strict: true,
     state: {
         siteTitle: "EasyCraft",
-        api: "http://139.155.255.21:8888/api",
         isLogin: false,
         userInfo: {}
     },

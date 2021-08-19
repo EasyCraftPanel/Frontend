@@ -24,7 +24,7 @@ export default {
         if (this.datas[index].editable)
           subdata.append(this.datas[index].id, this.datas[index].value)
       }
-      this.$axios.post(this.$store.state.api + "/server/base/info/update", subdata).then(res => {
+      this.$axios.post("/server/base/info/update", subdata).then(res => {
             if (res.data.status) {
               this.$store.dispatch('snackbar/openSnackbar', {
                 msg: res.data.msg,
@@ -33,7 +33,7 @@ export default {
               let data2 = new FormData()
               data2.append("id", this.$route.params.id)
               this.$axios
-                  .post(this.$store.state.api + "/server/base/columns", data2)
+                  .post("/server/base/columns", data2)
                   .then((response) => {
                     this.datas = response.data.data;
                   });
@@ -59,7 +59,7 @@ export default {
     let data = new FormData();
     data.append("id", this.$route.params.id);
     this.$axios
-        .post(this.$store.state.api + "/server", data)
+        .post("/server", data)
         .then((response) => {
           if (response.data.status) {
             this.server = response.data.data;
@@ -71,7 +71,7 @@ export default {
           }
         });
     this.$axios
-        .post(this.$store.state.api + "/server/base/columns", data)
+        .post("/server/base/columns", data)
         .then((response) => {
           this.datas = response.data.data;
         });

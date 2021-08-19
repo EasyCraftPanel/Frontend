@@ -32,7 +32,7 @@ export default {
   created() {
     this.$store.commit('changeTitle', "登出")
 
-    this.$axios.get(this.$store.state.api + "/logout").then((res) => {
+    this.$axios.get("/logout").then((res) => {
       this.seeicon = true
       this.iconname = res.data.status ? "mdi-check-circle" : "alert-circle"
       this.msg = res.data.msg

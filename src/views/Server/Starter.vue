@@ -15,7 +15,6 @@
               item-value="id"
               label="开服器"
               persistent-hint
-              return-object
               single-line
           ></v-select>
         </v-col>
@@ -100,7 +99,7 @@ export default {
     loadData: function () {
       let data = new FormData();
       data.append("id", this.$route.params.id)
-      this.$axios.post(this.$store.state.api + "/starters").then((res) => {
+      this.$axios.post("/starters").then((res) => {
         if (res.data.status) {
           this.starters = res.data.data;
         } else {
@@ -110,7 +109,7 @@ export default {
           })
         }
       })
-      this.$axios.post(this.$store.state.api + "/server/info/start", data).then((res) => {
+      this.$axios.post("/server/info/start", data).then((res) => {
             if (res.data.status) {
               this.startdata = res.data.data
               this.starter = res.data.data.starter
@@ -134,7 +133,7 @@ export default {
       this.loading = true
       let data = new FormData();
       data.append("device", device)
-      this.$axios.post(this.$store.state.api + "/cores/branches", data).then(res => {
+      this.$axios.post("/cores/branches", data).then(res => {
         if (res.data.status) {
           this.cores = []
           this.branches = res.data.data
@@ -151,7 +150,7 @@ export default {
       this.loading = true
       let data = new FormData();
       data.append("branch", branch)
-      this.$axios.post(this.$store.state.api + "/cores/branch/item", data).then(res => {
+      this.$axios.post("/cores/branch/item", data).then(res => {
         if (res.data.status) {
           this.cores = res.data.data;
         } else {
@@ -168,7 +167,7 @@ export default {
       data.append("serverId", this.$route.params.id)
       data.append("Core", this.core)
       data.append("Starter", this.starter)
-      this.$axios.post(this.$store.state.api + "/server/start/info/update", data).then(res => {
+      this.$axios.post("/server/start/info/update", data).then(res => {
         if (res.data.status) {
           this.$store.dispatch('snackbar/openSnackbar', {
             msg: res.data.msg,

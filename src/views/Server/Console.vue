@@ -91,7 +91,7 @@ export default {
       let data = new FormData();
       data.append("cmd", this.cmd)
       data.append("id", this.$route.params.id)
-      this.$axios.post(this.$store.state.api + "/server/console/input", data).then(res => {
+      this.$axios.post("/server/console/input", data).then(res => {
         if (res.data.status) {
           this.$store.dispatch('snackbar/openSnackbar', {
             msg: res.data.msg,
@@ -110,7 +110,7 @@ export default {
       let data = new FormData();
       data.append("last", this.lastCount)
       data.append("id", this.$route.params.id)
-      this.$axios.post(this.$store.state.api + "/server/console", data).then(res => {
+      this.$axios.post("/server/console", data).then(res => {
         if (res.data.status) {
           this.lastCount = res.data.data.lastid
           this.logs = this.logs.concat(res.data.data.logs)
@@ -129,7 +129,7 @@ export default {
       if (this.serverClean) {
         let data = new FormData()
         data.append("id", this.$route.params.id)
-        this.$axios.post(this.$store.state.api + "/server/console/clean", data).then(res => {
+        this.$axios.post("/server/console/clean", data).then(res => {
           if (res.data.status) {
             this.$store.dispatch('snackbar/openSnackbar', {
               msg: res.data.msg,

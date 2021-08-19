@@ -34,7 +34,7 @@ export default {
   created() {
     let data = new FormData();
     data.append("id", this.$route.params.id)
-    this.$axios.post(this.$store.state.api + "/server/configs/list", data).then(res => {
+    this.$axios.post("/server/configs/list", data).then(res => {
       if (res.data.status) {
         this.configs = res.data.data
       } else {

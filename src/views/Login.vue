@@ -70,7 +70,7 @@ export default {
       data.append("username", this.form.username)
       data.append("password", this.form.password)
       this.loading = true
-      this.$axios.post(this.$store.state.api + "/login", data)
+      this.$axios.post("/login", data)
           .then(data => {
             this.tipseen = true
             if (!data.data.status) {

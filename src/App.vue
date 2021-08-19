@@ -91,7 +91,7 @@ export default {
   components: {snackbar},
   data: () => ({drawer: false}),
   created() {
-    this.$axios.get(this.$store.state.api + "/login/status")
+    this.$axios.get("/login/status")
         .then(res => {
           if (!res.data.status) {
             window.localStorage.removeItem("auth")

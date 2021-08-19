@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [ 15.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -23,15 +23,23 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Yarn Build  
+        cache: 'yarn'
+
+    - name: Yarn Install  
       uses: borales/actions-yarn@v2.3.0
       with:
-          cmd: build
+        cmd: install # will run `yarn install` command
+        
+
+    - name: Yarn Build
+      uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: build # will run `yarn build` command
     
     - name: Upload a Build Artifact
-      uses: aactions/upload-artifact@v2.2.4
+      uses: actions/upload-artifact@v2.2.4
       with:
-        path: dist
+        name: dist
+        path: dist/
       
       
