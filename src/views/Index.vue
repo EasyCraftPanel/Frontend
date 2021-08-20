@@ -47,6 +47,20 @@
           </v-list-item-action>
         </v-list-item>
       </v-list>
+      <v-card-actions>
+        <v-row>
+          <v-col align="left">
+            <v-btn small @click="page--; loadServer()" v-if="previousPage">上一页</v-btn>
+          </v-col>
+          <v-col align="center">
+            <p class="align-end">第 {{ page + 1 }} 页 / 共 {{ Math.floor((serverCount + 9) / 10) }} 页</p>
+          </v-col>
+
+          <v-col align="right">
+            <v-btn small @click="page++; loadServer()" v-if="nextPage">下一页</v-btn>
+          </v-col>
+        </v-row>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -56,26 +70,40 @@ export default {
   name: "Index",
   created() {
     this.$store.commit("changeTitle", "服务器");
-    this.$axios.get("/servers").then((res) => {
-      if (res.data.status) {
-        this.servers = res.data.data;
-        this.serverCount = this.servers.length;
-        this.loading = false;
-      } else {
-        this.loading = false;
-        this.$store.dispatch('snackbar/openSnackbar', {
-          msg: res.data.msg,
-          color: 'red'
-        })
-      }
-    });
+    this.loadServer()
   },
   data: () => ({
     loading: true,
     servers: {},
     serverCount: 0,
+    page: 0,
+    previousPage: false,
+    nextPage: true
   }),
   methods: {
+    loadServer: function () {
+      if (this.page * 10 > this.serverCount) {
+        this.page--;
+        return
+      }
+      let data = new FormData();
+      data.append("page", this.page)
+      this.$axios.post("/servers", data).then((res) => {
+        if (res.data.status) {
+          this.nextPage = res.data.data.total > (this.page + 1) * 10;
+          this.previousPage = this.page !== 0;
+          this.servers = res.data.data.servers;
+          this.serverCount = res.data.data.total;
+          this.loading = false;
+        } else {
+          this.loading = false;
+          this.$store.dispatch('snackbar/openSnackbar', {
+            msg: res.data.msg,
+            color: 'red'
+          })
+        }
+      });
+    },
     serverClick: function (id) {
       this.$router.push("/server/" + id);
     },
