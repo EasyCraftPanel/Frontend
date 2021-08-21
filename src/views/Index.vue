@@ -1,9 +1,21 @@
 <template>
   <v-container>
     <v-card v-bind:loading="loading">
-      <v-card-title>我的服务器</v-card-title>
+      <v-card-title>
+        我的服务器
+      </v-card-title>
       <v-card-text>共 {{ serverCount }} 个</v-card-text>
       <v-list>
+        <v-list-item
+            v-if="canAddServer"
+            @click="$router.push('/create/server')"
+            v-ripple
+        >
+          <v-list-item-avatar>
+            <v-icon class="grey lighten-1">mdi-plus</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>创建服务器</v-list-item-content>
+        </v-list-item>
         <v-list-item
             @click="serverClick(server.id)"
             v-ripple
@@ -49,14 +61,14 @@
       </v-list>
       <v-card-actions>
         <v-row>
-          <v-col align="left">
+          <v-col cols="2" align="left">
             <v-btn small @click="page--; loadServer()" v-if="previousPage">上一页</v-btn>
           </v-col>
-          <v-col align="center">
+          <v-col cols="8" align="center">
             <p class="align-end">第 {{ page + 1 }} 页 / 共 {{ Math.floor((serverCount + 9) / 10) }} 页</p>
           </v-col>
 
-          <v-col align="right">
+          <v-col cols="2" align="right">
             <v-btn small @click="page++; loadServer()" v-if="nextPage">下一页</v-btn>
           </v-col>
         </v-row>
@@ -78,7 +90,8 @@ export default {
     serverCount: 0,
     page: 0,
     previousPage: false,
-    nextPage: true
+    nextPage: true,
+    canAddServer: false
   }),
   methods: {
     loadServer: function () {
@@ -94,6 +107,7 @@ export default {
           this.previousPage = this.page !== 0;
           this.servers = res.data.data.servers;
           this.serverCount = res.data.data.total;
+          this.canAddServer = res.data.data.canadd
           this.loading = false;
         } else {
           this.loading = false;
