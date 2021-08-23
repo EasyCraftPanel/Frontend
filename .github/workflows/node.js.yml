@@ -41,5 +41,14 @@ jobs:
       with:
         name: dist
         path: dist/
-      
-      
+        
+    - name: FTP Deployment
+      uses: SamKirkland/FTP-Deploy-Action@4.1.0
+      with:
+        server: 23.224.55.162
+        username: demo
+        password: ${{ secrets.DEMO_FTP_PASSWORD }}
+        protocol: ftp
+        local-dir: dist/
+        dangerous-clean-slate: true
+  
