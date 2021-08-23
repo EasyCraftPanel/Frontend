@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // axios 配置
 axios.defaults.timeout = 8000;
-axios.defaults.baseURL = 'http://demo.ecpanel.cn:25264/api';
+//axios.defaults.baseURL = 'http://127.0.0.1:8888/api';
 
 // http request 拦截器
 axios.interceptors.request.use(

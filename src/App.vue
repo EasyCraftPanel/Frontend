@@ -75,7 +75,7 @@
 #inspire {
   background-image: url("https://i.loli.net/2021/08/12/hJMAIbZiBn4sRq2.jpg");
   background-attachment: fixed;
-  background-size:100% 100%;
+  background-size: 100% 100%;
 }
 
 .app-drawer {
@@ -91,17 +91,21 @@ export default {
   components: {snackbar},
   data: () => ({drawer: false}),
   created() {
-    this.$axios.get("/login/status")
-        .then(res => {
-          if (!res.data.status) {
-            window.localStorage.removeItem("auth")
-            if (this.$route.name !== "login")
-              this.$router.push("/login")
-          } else {
-            this.$store.commit('onLogin', res.data.data.UserInfo)
-          }
-        }).catch(() => {
+    this.$axios.get("/apiurl").then((res) => {
+      this.$axios.defaults.baseURL = res.data;
+      this.$axios.get("/login/status")
+          .then(res => {
+            if (!res.data.status) {
+              window.localStorage.removeItem("auth")
+              if (this.$route.name !== "login")
+                this.$router.push("/login")
+            } else {
+              this.$store.commit('onLogin', res.data.data.UserInfo)
+            }
+          }).catch(() => {
+      })
     })
+
   },
   methods: {
     logout: function () {
