@@ -48,7 +48,6 @@ jobs:
         server: 23.224.55.162
         username: demo
         password: ${{ secrets.DEMO_FTP_PASSWORD }}
-        protocol: ftp
-        local-dir: dist/
-        dangerous-clean-slate: true
+        local-dir: ./dist/
+        state-name: ../.ftp-deploy-sync-state.json
   
